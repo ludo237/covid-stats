@@ -52,8 +52,7 @@ export default {
         this.confirmed = confirmed.value;
         this.recovered = recovered.value;
       })
-      .catch((r) => {
-        console.error(r);
+      .catch(() => {
         // TODO use an fancy HTML alert here!
         alert("Unable to fetch data");
       });
