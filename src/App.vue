@@ -4,21 +4,21 @@
       <Panel
         icon="users"
         color="blue"
-        title="136390"
+        :title="confirmed"
         subtitle="confirmed cases"
       />
 
       <Panel
         icon="hand-holding-heart"
         color="green"
-        title="69598"
+        :title="recovered"
         subtitle="recovered"
       />
 
       <Panel
         icon="skull-crossbones"
         color="red"
-        title="5058"
+        :title="deaths"
         subtitle="unfortunate deaths"
       />
     </PanelGrid>
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import PanelGrid from "@/components/PanelGrid.vue";
 import Panel from "@/components/Panel.vue";
 
@@ -35,7 +36,30 @@ export default {
   components: {
     PanelGrid,
     Panel
-  }
+  },
+
+  data: () => ({
+    confirmed: 0,
+    recovered: 0,
+    deaths: 0,
+  }),
+
+  async mounted() {
+    this
+      .getSummary()
+      .then(({ confirmed, recovered, deaths }) => {
+        this.deaths = deaths.value;
+        this.confirmed = confirmed.value;
+        this.recovered = recovered.value;
+      })
+      .catch((r) => {
+        console.error(r);
+        // TODO use an fancy HTML alert here!
+        alert("Unable to fetch data");
+      });
+  },
+
+  methods: mapActions(['getSummary'])
 };
 </script>
 
