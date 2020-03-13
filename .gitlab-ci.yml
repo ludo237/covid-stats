@@ -1,0 +1,61 @@
+stages:
+  - install
+  - build
+  - staging
+
+image: node:latest
+
+cache:
+  key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
+
+install:
+  stage: install
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 1 days
+    when: always
+  cache:
+    paths:
+      - node_modules/
+  script:
+    - npm ci # This acts as npm install
+  only:
+    - merge_requests
+    - tags
+
+build:
+  stage: build
+  dependencies:
+    - install
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 days
+    when: always
+  cache:
+    paths:
+      - dist/
+  script:
+    - npm run build
+  only:
+    - merge_requests
+    - tags
+
+  # the job must be named pages
+pages:
+  stage: deploy
+  dependencies:
+    - install
+  script:
+    - npm run stage
+    - mv public public-vue # GitLab Pages hooks on the public folder
+    - mv dist public # rename the dist folder (result of npm run build)
+    # activate gzip support wih the following line:
+    - find public -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\)$' -exec gzip -f -k {} \;
+  artifacts:
+    paths:
+      - public # artifact path must be /public for GitLab Pages to pick it up
+  only:
+    - merge_requests
+    - tags
