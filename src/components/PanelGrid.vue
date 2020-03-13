@@ -1,5 +1,8 @@
 <template>
-  <div class="grid gap-5 grid-flow-row grid-rows-1" :class="gridCols">
+  <div
+    class="grid gap-5 md:gap-12 grid-flow-col md:grid-flow-row grid-cols-1"
+    :class="responsiveGrid"
+  >
     <slot />
   </div>
 </template>
@@ -17,8 +20,8 @@ export default {
   },
 
   computed: {
-    gridCols() {
-      return `grid-cols-${this.cols}`;
+    responsiveGrid() {
+      return [`grid-rows-${this.cols}`, `md:grid-cols-${this.cols}`];
     }
   }
 }
