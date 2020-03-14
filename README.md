@@ -1,6 +1,8 @@
 # Corona VIrus Stats
 
-A project that fetch from Mathdro's APIs and create fancy graphics to show that's going on with Covid-19. Built with Tailwind, Vuejs and some ☕.
+A project that fetch from Mathdro's APIs and create fancy graphics to show that's going on with Covid-19. Built with Tailwind, Vuejs and some ☕️
+
+Public demo can be found [here](git@gitlab.com:ludo237/covid-stats.git)
 
 ## How it works
 

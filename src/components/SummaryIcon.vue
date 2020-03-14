@@ -11,12 +11,12 @@
 import Icon from "@/components/Icon.vue";
 
 export default {
-  name: "PanelIcon",
+  name: "SummaryIcon",
 
   props: {
     icon: {
       required: true,
-      type: String,
+      type: String
     },
 
     color: {
@@ -34,5 +34,5 @@ export default {
       return [`bg-${this.color}-100`, `text-${this.color}-500`];
     }
   }
-}
+};
 </script>

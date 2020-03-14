@@ -1,64 +1,22 @@
 <template>
   <div class="container mx-auto p-5">
-    <PanelGrid cols="3">
-      <Panel
-        icon="users"
-        color="blue"
-        :title="confirmed"
-        subtitle="confirmed cases"
-      />
+    <Summary class="mb-5" />
 
-      <Panel
-        icon="hand-holding-heart"
-        color="green"
-        :title="recovered"
-        subtitle="recovered"
-      />
-
-      <Panel
-        icon="skull-crossbones"
-        color="red"
-        :title="deaths"
-        subtitle="unfortunate deaths"
-      />
-    </PanelGrid>
+    <DailySummary />
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import PanelGrid from "@/components/PanelGrid.vue";
-import Panel from "@/components/Panel.vue";
+import Summary from "@/components/Summary.vue";
+import DailySummary from "@/components/DailySummary.vue";
 
 export default {
   name: "App",
 
   components: {
-    PanelGrid,
-    Panel
-  },
-
-  data: () => ({
-    confirmed: 0,
-    recovered: 0,
-    deaths: 0,
-  }),
-
-  async mounted() {
-    this
-      .getSummary()
-      .then(({ confirmed, recovered, deaths }) => {
-        this.deaths = deaths.value;
-        this.confirmed = confirmed.value;
-        this.recovered = recovered.value;
-      })
-      .catch(() => {
-        // TODO use an fancy HTML alert here!
-        alert("Unable to fetch data");
-      });
-  },
-
-  methods: mapActions(['getSummary'])
+    Summary,
+    DailySummary
+  }
 };
 </script>
 
