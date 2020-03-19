@@ -1,5 +1,5 @@
 <template>
-  <BarChart :chart-data="data" :options="options" />
+  <BarChart ref="chart" :chart-data="data" :options="options" />
 </template>
 
 <script>
@@ -12,7 +12,7 @@ export default {
     summaryData: {
       required: false,
       type: Object,
-      default: () => {}
+      default: () => { }
     }
   },
 
@@ -21,16 +21,16 @@ export default {
   },
 
   data: () => ({
+    defaultLabels: ["Mainland China", "Rest of The World", "Total Recovered"],
+    defaultDataset: {
+      // Directly taken from red-300, teal-300 and green-300 of tailwind
+      backgroundColor: ["#feb2b2", "#81e6d9", "#9ae6b4"],
+      // Pre fill the data
+      data: [0, 0, 0]
+    },
     data: {
-      labels: ["Mainland China", "Rest of The World", "Total Recovered"],
-      datasets: [
-        {
-          // Directly taken from red-300, teal-300 and green-300 of tailwind
-          backgroundColor: ["#feb2b2", "#81e6d9", "#9ae6b4"],
-          // Pre fill the data
-          data: [0, 0, 0]
-        }
-      ]
+      labels: [],
+      datasets: []
     },
     options: {
       responsive: true,
@@ -39,8 +39,7 @@ export default {
         display: false
       },
       title: {
-        display: true,
-        text: "{totalConfirmed} cases"
+        display: false,
       },
       dataset: {
         barPercentage: 1,
@@ -68,13 +67,16 @@ export default {
   }),
 
   async beforeMount() {
-    this.options.title.text = `${this.summaryData.totalConfirmed} Cases so far`;
+    this.defaultDataset.data = [this.summaryData.mainlandChina, this.summaryData.otherLocations, this.summaryData.totalRecovered]
+    this.data = { datasets: [this.defaultDataset], labels: this.defaultLabels };
+  },
 
-    this.data.datasets[0].data = [
-      this.summaryData.mainlandChina,
-      this.summaryData.otherLocations,
-      this.summaryData.totalRecovered
-    ];
+  watch: {
+    summaryData: function (newData) {
+      this.defaultDataset.data = [newData.mainlandChina, newData.otherLocations, newData.totalRecovered];
+
+      this.data = { datasets: [this.defaultDataset], labels: this.defaultLabels };
+    }
   }
 };
 </script>

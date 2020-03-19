@@ -1,46 +1,52 @@
 <template>
   <Panel>
-    <select>
-      <option value="2020/03/08">08 March</option>
-    </select>
+    <span v-if="isLoading"></span>
+    <div class="flex flex-col" v-else>
+      <DatePicker class="self-end" @date:change="changeSummaryData" />
 
-    <DailySummaryChart :summary-data="data" />
+      <h3 class="text-lg font-semibold text-center">Total Cases</h3>
+
+      <DailySummaryChart class="mt-4" :summary-data="day" />
+    </div>
   </Panel>
 </template>
 
 <script>
-//import { parse, parseISO, format } from "date-fns";
+import { mapActions, mapGetters } from "vuex";
 import Panel from "@/components/Panel.vue";
-import DailySummaryChart from "@/components/DailySummaryChart.vue";
 
 export default {
   name: "DailySummary",
 
   components: {
     Panel,
-    DailySummaryChart
+    DatePicker: () => import(/* webpackChunkName: "date-picker" */ "@/components/DatePicker.vue"),
+    DailySummaryChart: () => import(/*webpackChunkName: "daily-summary-chart" */ "@/components/DailySummaryChart.vue")
   },
 
   data: () => ({
-    parsedDate: () => new Date().toISOString()
+    isLoading: true,
+    day: {}
   }),
 
+  async beforeMount() {
+    this
+      .getDailySummary()
+      .then(() => this.day = this.todaySummary)
+      .catch((response) => console.error(response))
+      .finally(() => this.isLoading = false);
+  },
+
+  methods: {
+    changeSummaryData(date) {
+      this.day = this.dailySummary(date);
+    },
+
+    ...mapActions(["getDailySummary"])
+  },
+
   computed: {
-    data() {
-      // Filtered from the api request based on the select and reportDateString
-      // TODO make it works with the API!
-      return {
-        reportDate: 1583643600000,
-        mainlandChina: 80699,
-        otherLocations: 29136,
-        totalConfirmed: 109835,
-        totalRecovered: 60695,
-        reportDateString: "2020/03/08",
-        deltaConfirmed: 3999,
-        deltaRecovered: 2336,
-        objectid: 49
-      };
-    }
+    ...mapGetters(["todaySummary", "dailySummary"])
   }
 };
 </script>

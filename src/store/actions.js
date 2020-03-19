@@ -1,4 +1,5 @@
 import Api from "@/api";
+import * as mutations from "./mutation-types";
 
 export const getSummary = () => {
   return new Promise((resolve, reject) => {
@@ -11,12 +12,15 @@ export const getSummary = () => {
   });
 };
 
-export const getDailySummary = () => {
+export const getDailySummary = ({ commit }) => {
   return new Promise((resolve, reject) => {
     Api
       .dailySummary()
       .then(
-        ({ data }) => resolve(data),
+        ({ data }) => {
+          commit(mutations.UPDATE_SUMMARIES, data);
+          resolve(data);
+        },
         ({ response }) => reject(response),
       )
   })
