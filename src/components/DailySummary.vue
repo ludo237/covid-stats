@@ -33,7 +33,8 @@ export default {
     this
       .getDailySummary()
       .then(() => this.day = this.todaySummary)
-      .catch((response) => console.error(response))
+      // Todo use a fancy alert
+      .catch((response) => alert("Error during fetch"))
       .finally(() => this.isLoading = false);
   },
 
